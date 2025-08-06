@@ -16,12 +16,22 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: '18'
+      - name: Set up Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
       - name: Install dependencies
         run: |
-          npm install -g pkg
           npm install
+          bun install
       - name: Build binary
-        run: npm run build
+        shell: bash
+        run: |
+          if [[ "${{ runner.os }}" == "Windows" ]]; then
+            bun build index.js --compile --outfile build/blackburn-launcher.exe
+          else
+            bun build index.js --compile --outfile build/blackburn-launcher
+          fi
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
