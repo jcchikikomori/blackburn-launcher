@@ -1,0 +1,32 @@
+{
+  "name": "blackburn-launcher",
+  "version": "0.0.1",
+  "description": "Let Sargeant Blackburn play Battlefield 3 singleplayer without Battlelog",
+  "keywords": [
+    "bf3",
+    "battlefield",
+    "battlelog",
+    "origin"
+  ],
+  "homepage": "https://github.com/jcchikikomori/blackburn-launcher#readme",
+  "bugs": {
+    "url": "https://github.com/jcchikikomori/blackburn-launcher/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jcchikikomori/blackburn-launcher.git"
+  },
+  "license": "MIT",
+  "author": "jcchikikomori",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "serve": "node index.js"
+  },
+  "devDependencies": {
+    "cors": "^2.8.5",
+    "express": "^5.1.0",
+    "node-fetch": "^3.3.2"
+  }
+}

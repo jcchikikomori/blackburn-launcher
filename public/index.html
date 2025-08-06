@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Battlefield 3 Singleplayer Launcher</title>
+  <link href="https://fonts.cdnfonts.com/css/gobold" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0/css/bulma.min.css"
+    integrity="sha256-Z/om3xyp6V2PKtx8BPobFfo9JCV0cOvBDMaLmquRS+4=" crossorigin="anonymous">
+</head>
+
+<style>
+  html,
+  body {
+    height: 100%;
+    margin: 0;
+    font-family: 'Arial', sans-serif;
+  }
+
+  .title {
+    font-family: 'Gobold', 'Arial', sans-serif;
+  }
+</style>
+
+<body class="has-text-centered p-6">
+  <section class="section">
+    <h1 class="title">Battlefield 3 Singleplayer Launcher</h1>
+
+    <div id="notification" class="notification is-dark is-hidden"></div>
+
+    <button id="launchBtn" class="button is-primary is-large" disabled>Launch Game</button>
+  </section>
+
+  <script>
+    const statusNote = document.getElementById('notification');
+    const launchBtn = document.getElementById('launchBtn');
+    var gameStatus = false;
+
+    async function checkServerStatus() {
+      try {
+        const res = await fetch("/ping", { method: 'POST', mode: 'cors' });
+        console.debug('Server status:', res.status);
+        console.debug(res);
+        if (res.status === 404) {
+          console.debug('Server not found, assuming offline');
+          return false;
+        }
+        else if (res.status === 501) {
+          console.warn('Server not implemented, but got the response');
+          return true;
+        }
+        return res.ok;
+      } catch (err) {
+        console.error('Error checking server status:', err);
+        return false;
+      }
+    }
+
+    async function updateStatusUI() {
+      const isOnline = await checkServerStatus();
+      if (!gameStatus) {
+        if (isOnline) {
+          statusNote.className = 'notification is-success';
+          statusNote.textContent = '🟢 The Game is online. Ready to launch.';
+          launchBtn.disabled = false;
+        } else {
+          statusNote.className = 'notification is-danger';
+          statusNote.textContent = '🔴 The Game is offline. Please wait...';
+          launchBtn.disabled = true;
+        }
+      }
+      statusNote.classList.remove('is-hidden');
+    }
+
+    setInterval(updateStatusUI, 5000); // auto-refresh every 5s
+    updateStatusUI(); // initial run
+
+    launchBtn.addEventListener('click', async () => {
+      statusNote.className = 'notification is-info';
+      statusNote.textContent = '⏳ Sending request...';
+      try {
+        const response = await fetch("/start", {
+          method: 'POST',
+          mode: 'cors',
+          credentials: 'omit'
+        });
+        if (response.ok) {
+          statusNote.className = 'notification is-success';
+          statusNote.textContent = '✅ Game launched successfully!';
+          gameStatus = true;
+        } else if (response.status === 409) {
+          statusNote.className = 'notification is-warning';
+          statusNote.textContent = '⚠️ The game is already running. Please restart with your Steam client.';
+          gameStatus = true;
+        } else {
+          statusNote.className = 'notification is-warning';
+          statusNote.textContent = '⚠️ Launch failed. Try again.';
+          gameStatus = false;
+        }
+      } catch (err) {
+        statusNote.className = 'notification is-danger';
+        statusNote.textContent = '❌ Error: ' + err.message;
+        gameStatus = false;
+      }
+    });
+  </script>
+</body>
+
+</html>
