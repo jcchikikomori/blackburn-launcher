@@ -18,10 +18,14 @@ jobs:
           node-version: '18'
       - name: Install dependencies
         run: |
-          npm install -g pkg
           npm install
       - name: Build binary
-        run: npm run build
+        run: |
+          if [[ "$RUNNER_OS" == "Linux" ]]; then
+            npm run build:linux
+          elif [[ "$RUNNER_OS" == "Windows" ]]; then
+            npm run build:win
+          fi
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:

@@ -21,18 +21,16 @@
   "type": "commonjs",
   "main": "index.js",
   "bin": "index.js",
-  "pkg": {
-    "targets": ["node18-linux-x64", "node18-win-x64"]
-  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "serve": "node index.js",
-    "build": "pkg . --out blackburn-launcher --out-path build/"
+    "build:linux": "nexe index.js -t linux-x64-18.20.2 -o build/blackburn-launcher-linux",
+    "build:win": "nexe index.js -t windows-x64-18.20.2 -o build/blackburn-launcher-win.exe"
   },
   "devDependencies": {
+    "axios": "^1.11.0",
     "cors": "^2.8.5",
     "express": "^5.1.0",
-    "node-fetch": "^3.3.2",
-    "pkg": "^5.8.1"
+    "nexe": "^5.0.0-beta.4"
   }
 }

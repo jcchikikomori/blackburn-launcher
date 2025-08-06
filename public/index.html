@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Battlefield 3 Singleplayer Launcher</title>
+  <title>PROJECT BLACKBURN BF3</title>
   <link href="https://fonts.cdnfonts.com/css/gobold" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0/css/bulma.min.css"
     integrity="sha256-Z/om3xyp6V2PKtx8BPobFfo9JCV0cOvBDMaLmquRS+4=" crossorigin="anonymous">
@@ -21,11 +21,16 @@
   .title {
     font-family: 'Gobold', 'Arial', sans-serif;
   }
+
+  section {
+    max-width: 480px;
+    margin: 0 auto;
+  }
 </style>
 
 <body class="has-text-centered p-6">
   <section class="section">
-    <h1 class="title">Battlefield 3 Singleplayer Launcher</h1>
+    <h1 class="title">PROJECT BLACKBURN BF3</h1>
 
     <div id="notification" class="notification is-dark is-hidden"></div>
 
@@ -45,10 +50,6 @@
         if (res.status === 404) {
           console.debug('Server not found, assuming offline');
           return false;
-        }
-        else if (res.status === 501) {
-          console.warn('Server not implemented, but got the response');
-          return true;
         }
         return res.ok;
       } catch (err) {
