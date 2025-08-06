@@ -5,7 +5,7 @@ const cors = require('cors');
 const app = express();
 const pingUrl = "http://127.0.0.1:3215/game/launch";
 const launchUrl = "http://127.0.0.1:3215/game/launch?offerIds=DR%3A224766400&cmdParams=singleplayer";
-const PORT = 3000;
+const PORT = 3600;
 
 app.use(cors());
 app.use(express.static('public'));
