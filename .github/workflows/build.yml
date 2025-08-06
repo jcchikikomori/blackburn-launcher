@@ -19,13 +19,11 @@ jobs:
       - name: Install dependencies
         run: |
           npm install
-      - name: Build binary
+      - name: Ensure pkg bytecode is installed
         run: |
-          if [[ "$RUNNER_OS" == "Linux" ]]; then
-            npm run build:linux
-          elif [[ "$RUNNER_OS" == "Windows" ]]; then
-            npm run build:win
-          fi
+          npx pkg-fetch --platform ${{ matrix.os == 'windows-latest' && 'win' || 'linux' }} --arch x64 --node-range node18
+      - name: Build binary
+        run: npm run build
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
