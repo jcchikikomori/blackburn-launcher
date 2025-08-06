@@ -24,8 +24,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "serve": "node index.js",
-    "build:linux": "nexe index.js -t linux-x64-18.20.2 -o build/blackburn-launcher-linux",
-    "build:win": "nexe index.js -t windows-x64-18.20.2 -o build/blackburn-launcher-win.exe"
+    "build:linux": "nexe index.js -t linux-x64-18.20.2 --build -o build/blackburn-launcher-linux",
+    "build:win": "nexe index.js -t windows-x64-18.20.2 --build -o build/blackburn-launcher-win.exe"
   },
   "devDependencies": {
     "axios": "^1.11.0",
