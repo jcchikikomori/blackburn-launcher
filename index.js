@@ -28,13 +28,13 @@ app.post('/ping', async (req, res) => {
   try {
     const launchRes = await axios.head(pingUrl);
     const status = launchRes.status;
-    // No body for HEAD requests
+    return res.send({ status: status });
+  } catch (err) {
+    const status = err.status;
     if (status === 501) {
       return res.send({ status: 200, message: 'Battlefield 3 is now running with Battlelog.' });
     }
-    return res.send({ status });
-  } catch (err) {
-    res.status(500).send({ status: 500, message: 'Proxy error (Ping): ' + err.message });
+    return res.status(500).send({ status: 500, message: 'Proxy error (Ping): ' + err.message });
   }
 });
 
@@ -59,7 +59,14 @@ app.post('/start', async (req, res) => {
     });
     const status = launchRes.status;
     let data = launchRes.data;
+    const message202 = 'Battlefield 3 singleplayer mode is now running. Sit tight and Enjoy!';
+    const message409 = 'The game is already running. Please restart with your Steam client.';
     let message = typeof data === 'string' ? data : JSON.stringify(data);
+    if (status === 202) {
+      message = message202;
+    } else if (status === 409) {
+      message = message409;
+    }
     res.status(status).send({ status, message, data });
   } catch (err) {
     res.status(500).send({ status: 500, message: 'Proxy error (Launch): ' + err.message });
