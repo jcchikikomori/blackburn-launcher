@@ -16,20 +16,16 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: '18'
-      - name: Install dependencies (npm)
-        run: npm install
-      - name: Install Bun then build binary
+      - name: Set up Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+      - name: Install dependencies
         run: |
-          if [[ "${{ runner.os }}" == "Windows" ]]; then
-            pwsh -Command "irm bun.sh/install.ps1|iex"
-            export PATH=$PATH:/c/Users/runneradmin/.bun/bin
-          else
-            curl -fsSL https://bun.sh/install | bash
-            export PATH="$HOME/.bun/bin:$PATH"
-          fi
+          npm install
+          bun install
       - name: Build binary
         run: |
-          bun install
           if [[ "${{ runner.os }}" == "Windows" ]]; then
             bun build index.js --compile --outfile build/blackburn-launcher.exe
           else
