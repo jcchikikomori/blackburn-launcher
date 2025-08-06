@@ -19,16 +19,16 @@ jobs:
       - name: Install dependencies (npm)
         run: npm install
       - name: Install Bun then build binary
-        shell: bash
         run: |
           if [[ "${{ runner.os }}" == "Windows" ]]; then
             pwsh -Command "irm bun.sh/install.ps1|iex"
-            echo 'C:/Users/runneradmin/.bun/bin' >> $GITHUB_PATH
+            export PATH=$PATH:/c/Users/runneradmin/.bun/bin
           else
             curl -fsSL https://bun.sh/install | bash
-            echo '$HOME/.bun/bin' >> $GITHUB_PATH
-            exec $SHELL -l
+            export PATH="$HOME/.bun/bin:$PATH"
           fi
+      - name: Build binary
+        run: |
           bun install
           if [[ "${{ runner.os }}" == "Windows" ]]; then
             bun build index.js --compile --outfile build/blackburn-launcher.exe
