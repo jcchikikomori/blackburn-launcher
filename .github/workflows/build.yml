@@ -16,14 +16,25 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: '18'
-      - name: Install dependencies
+      - name: Install dependencies (npm)
+        run: npm install
+      - name: Install Bun then build binary
+        shell: bash
         run: |
-          npm install
-      - name: Ensure pkg bytecode is installed
-        run: |
-          npx pkg-fetch --platform ${{ matrix.os == 'windows-latest' && 'win' || 'linux' }} --arch x64 --node-range node18
-      - name: Build binary
-        run: npm run build
+          if [[ "${{ runner.os }}" == "Windows" ]]; then
+            pwsh -Command "irm bun.sh/install.ps1|iex"
+            echo 'C:/Users/runneradmin/.bun/bin' >> $GITHUB_PATH
+          else
+            curl -fsSL https://bun.sh/install | bash
+            echo '$HOME/.bun/bin' >> $GITHUB_PATH
+            exec $SHELL -l
+          fi
+          bun install
+          if [[ "${{ runner.os }}" == "Windows" ]]; then
+            bun build index.js --compile --outfile build/blackburn-launcher.exe
+          else
+            bun build index.js --compile --outfile build/blackburn-launcher
+          fi
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:

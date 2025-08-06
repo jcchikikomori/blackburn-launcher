@@ -21,7 +21,7 @@ I have no goal or intention to replace launchers for Multiplayer. This is just a
 - Steam copy of Battlefield 3
 - Windows whatever (not Vista) or Linux
 - NodeJS
-- NodeJS's `pkg` package
+- [Bun](bun.sh)
 
 ## How to use
 
