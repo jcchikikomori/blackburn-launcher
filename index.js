@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const path = require('path');
 const fs = require('fs');
+const { exec } = require("child_process");
 const axios = require('axios');
 const app = express();
 const pingUrl = "http://127.0.0.1:3215/game/launch";
@@ -10,19 +11,6 @@ const PORT = 3600;
 
 app.use(cors());
 app.use(express.static('public'));
-
-app.get('/', (req, res) => {
-  // Serve index.html from disk only
-  const indexPath = path.join(__dirname, 'public', 'index.html');
-  fs.readFile(indexPath, 'utf8', (err, data) => {
-    if (!err) {
-      res.setHeader('Content-Type', 'text/html');
-      return res.send(data);
-    }
-    // If index.html is missing, return 404
-    res.status(404).send('index.html not found');
-  });
-});
 
 app.post('/ping', async (req, res) => {
   try {
@@ -73,4 +61,16 @@ app.post('/start', async (req, res) => {
   }
 });
 
-app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
+app.listen(PORT, () => {
+  exec(`zenity --info --title="Welcome to the Battlefield 3 (Single Player)" --text="Proxy server running on http://localhost:${PORT}\n\nTerminate all 'blackburn-launcher' processes? Click Terminate to proceed." --ok-label="Terminate" && pkill -TERM -f blackburn-launcher`, (error, stdout, stderr) => {
+    if (error) {
+      console.error(`Error: ${error.message}`);
+      return;
+    }
+    if (stderr) {
+      console.error(`stderr: ${stderr}`);
+      return;
+    }
+  });
+});
+
